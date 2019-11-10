@@ -1,43 +1,53 @@
-body
-{
+body {
   background-color: rgb(233, 219, 229);
 }
 
-
-.avatar
-{
+.avatar {
   max-width: 50px;
   max-width: 50px;
   border-radius: 50%;
 }
 
-.col-np
-{
+.col-np {
   padding-left: 0;
 }
 
-
-div < main
-{
+div < main {
   border-color: rgba(180, 232, 246, 0.53);
 }
 
-.pagination
-{
+.pagination {
   align-self: center;
 }
 
+.tags {
+  margin-top: 30px;
+  border-radius: 20px;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.79);
+}
 
-.question
-{
+a < .question {
+  padding-left: 20px;
+}
+
+.question {
   border-radius: 20px;
   padding-bottom: 10px;
   background-color: rgba(255, 255, 255, 0.79);
 }
 
-.answer
-{
+.answer {
   border-radius: 20px;
   padding-bottom: 10px;
   background-color: rgba(244, 226, 226, 0.79);
+}
+
+.center-text
+{
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid black;
+  padding: 0em 1.8em;
+
 }
