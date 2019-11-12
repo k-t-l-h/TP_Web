@@ -1,59 +1,12 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-
-<head>
-  <meta charset="utf-8">
-  <title>Numbers</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-  <link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-
-    <div class="container">
-      <a class="navbar-brand" href="#">AskNumbers</a>
-      <form class="form-inline">
-        <input class="form-control mr-sm-2" type="search" placeholder="COLOOOOORS" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Ask!</button>
-      </form>
-    </div>
+{% extends "ask/base.html"%}
+{% load static %}
 
 
-    <div class="container avatar-container">
-      <div class="col-3 ml-auto">
-        <img class="avatar" src="avatar.png" alt="">
-      </div>
-      <div>
-        <div class="row">
-          <a href="#">Mr. Zero</a>
-        </div>
-
-        <div class="row">
-
-          <div class="col col-np">
-            <a href="">settigs</a>
-          </div>
-
-          <div class="col col-np">
-            <a href="">logout</a>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </nav>
-
-  <div class="container ">
-    <div class="row mb-3">
-      <!-- For  Questions -->
-      <div class="col-8 mt-3 mr-3">
+{% block content %}
 
         <h2 align="center">Welcome to Numbers World!</h2>
 
-        
+
         <form>
           <div class="form-row">
             <label for="validationServer01">Login</label>
@@ -115,11 +68,10 @@
           </div>
           <button class="btn btn-primary" type="submit">Register</button>
         </form>
+{% endblock %}
 
 
-      </div>
-      <!-- For  Tags -->
-      <div class="col-3">
+{% block sidebar %}
 
         <div class="row tags">
           <p class="mr-3 w-100 h2">Popular tags</p>
@@ -136,13 +88,7 @@
           <a class="mr-3 h4 w-100" href="#">Euler</a>
           <a class="mr-3 h4 w-100" href="#">Lagrange</a>
           <a class="mr-3 h4 w-100" href="#">Gauss</a>
+
         </div>
 
-      </div>
-    </div>
-
-  </div>
-
-</body>
-
-</html>
+{% endblock %}

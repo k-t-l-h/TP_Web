@@ -1,0 +1,55 @@
+{% extends "ask/base.html"%}
+{% load static %}
+
+
+
+{% block content %}
+<h2 align="center">Welcome to Numbers World!</h2>
+<form>
+<div class="form-row">
+  <label for="validationServer01">Login</label>
+  <input type="text" class="form-control is-valid" id="validationServer01" placeholder="Star Login" value="login" required>
+  <div class="valid-feedback">
+  Looks good!
+  </div>
+</div>
+
+<div class="form-row">
+<label for="exampleInputPassword1">Password</label>
+<input type="password" class="form-control is-valid" id="exampleInputPassword1" placeholder="password">
+  <div class="valid-feedback">
+  Good password!
+  </div>
+</div>
+
+
+<div class="form-row mt-2">
+<button class="btn btn-primary" type="submit">Login!</button>
+</div>
+</form>
+<div class="row ml-2">
+<a href="{% url 'signup' %}" class="mr-2 mx-auto my-auto">Dont have an account?</a>
+</div>
+{% endblock %}
+
+{% block sidebar %}
+
+        <div class="row tags">
+          <p class="mr-3 w-100 h2">Popular tags</p>
+          <a class="mr-3 h4" href="#">Numbers</a>
+          <a class="mr-3 h4" href="#">Algebra</a>
+          <a class="mr-3 h4" href="#">Prime</a>
+          <a class="mr-3 h4" href="#">Probability</a>
+        </div>
+
+        <div class="row tags">
+          <p class="mr-3 h2">Best Members</p>
+          <a class="mr-3 h4 w-100" href="#">Riemann</a>
+          <a class="mr-3 h4 w-100" href="#">Fermat</a>
+          <a class="mr-3 h4 w-100" href="#">Euler</a>
+          <a class="mr-3 h4 w-100" href="#">Lagrange</a>
+          <a class="mr-3 h4 w-100" href="#">Gauss</a>
+
+        </div>
+
+{% endblock %}
