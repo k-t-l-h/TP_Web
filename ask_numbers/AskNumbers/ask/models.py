@@ -36,7 +36,7 @@ class Answer(models.Model):
 
 class Profile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, unique = True)
-
+    
     def __init__(self, _user):
         new_user = self.objects.create(user = _user)
         return new_answer
@@ -46,14 +46,27 @@ class QLike(models.Model):
     question = models.ForeignKey(to=Question, on_delete=models.CASCADE)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
 
-    def __init__(self, _question, _user):
-        return(self.objects.create(question = _question, user = _user))
+    class Meta:
+        unique_together = (("question", "user"),)
 
 class ALike(models.Model):
     answer = models.ForeignKey(to=Answer, on_delete=models.CASCADE)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
 
-    def __init__(self, _answer, _user):
-        return(self.objects.create(answer = _answer, user = _user))
+    class Meta:
+        unique_together = (("answer", "user"),)
 
 #дизлайки
+class QDislike(models.Model):
+    question = models.ForeignKey(to=Question, on_delete=models.CASCADE)
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = (("question", "user"),)
+
+class ADislike(models.Model):
+    answer = models.ForeignKey(to=Answer, on_delete=models.CASCADE)
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = (("answer", "user"),)
