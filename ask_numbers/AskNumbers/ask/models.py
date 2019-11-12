@@ -35,8 +35,8 @@ class Answer(models.Model):
 
 
 class Profile(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, unique = True)
-    
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
     def __init__(self, _user):
         new_user = self.objects.create(user = _user)
         return new_answer
