@@ -29,18 +29,33 @@
       </div>
       <div>
         <div class="row">
-          <a href="#">Mr. Zero</a>
+          {% if user.is_authenticated %}
+            <a href="#">{{user.username}}</a>
+          {% else %}
+            <a href="#">Mr. Zero</a>
+         {% endif %}
         </div>
 
         <div class="row">
-
+          {% if user.is_authenticated %}
           <div class="col col-np">
           <a href="{%url 'settings'%}">settigs</a>
           </div>
 
           <div class="col col-np">
-          <a href="{%url 'login'%}">logout</a>
+          <a href="{%url 'logout'%}">logout</a>
           </div>
+          {% else %}
+          <div class="col col-np">
+          <a href="{%url 'login'%}">log in</a>
+          </div>
+
+          <div class="col col-np">
+          <a href="{%url 'signup'%}">signup</a>
+          </div>
+         {% endif %}
+
+
         </div>
       </div>
 

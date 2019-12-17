@@ -5,31 +5,30 @@
 
 {% block content %}
 <h2 align="center">Welcome to Numbers World!</h2>
-<form>
-<div class="form-row">
-  <label for="validationServer01">Login</label>
-  <input type="text" class="form-control is-valid" id="validationServer01" placeholder="Star Login" value="login" required>
-  <div class="valid-feedback">
-  Looks good!
-  </div>
-</div>
 
-<div class="form-row">
-<label for="exampleInputPassword1">Password</label>
-<input type="password" class="form-control is-valid" id="exampleInputPassword1" placeholder="password">
-  <div class="valid-feedback">
-  Good password!
-  </div>
-</div>
+{% if form.errors %}
+  <p>{{form.errors}}</p>
+{% endif %}
 
+<form method="post" action="{% url 'login' %}">
+{% csrf_token %}
+<table>
 
-<div class="form-row mt-2">
-<button class="btn btn-primary" type="submit">Login!</button>
-</div>
+<tr>
+  <td>{{ form.username.label_tag }}</td>
+  <td>{{ form.username }}</td>
+</tr>
+
+<tr>
+  <td>{{ form.password.label_tag }}</td>
+  <td>{{ form.password }}</td>
+</tr>
+
+</table>
+
+<input type="submit" value="login" />
+<input type="hidden" name="next" value="{{ index }}" />
 </form>
-<div class="row ml-2">
-<a href="{% url 'signup' %}" class="mr-2 mx-auto my-auto">Dont have an account?</a>
-</div>
 {% endblock %}
 
 {% block sidebar %}

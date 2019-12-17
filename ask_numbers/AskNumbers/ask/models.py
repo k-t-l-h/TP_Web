@@ -5,13 +5,10 @@ from django.urls import reverse
 from django import forms
 
 class QManager(models.Manager):
-    def hot(self, page_number, limit):
-        return paginator.paginate(
-            self.order_by('-rating'), limit, page_number)
-
-    def questions_by_tag(self, tag_name, page_number, limit):
-        t = Tag.objects.get(name=tag_name)
-        return paginator.paginate(self.filter(tag=t), limit, page_number)
+    def hot(self):
+        return self.order_by('-rating')
+    def by_tag(self, _tag):
+        return self.all().filter(tag = _tag)
 
 
 

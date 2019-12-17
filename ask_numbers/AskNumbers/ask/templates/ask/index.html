@@ -6,7 +6,7 @@
 
 <div class="row mt-3">
     <p class="mr-3 h2">New Questions</p>
-    <a href="#" class="h2">Hot Questions</a>
+    <a href="{% url 'hot' %}" class="h2">Hot Questions</a>
 </div>
 
 {% for question in questions %}
@@ -24,7 +24,7 @@
           margin-right: auto;
           border: 1px solid black;
           padding: 0em 1.8em;">
-          5
+          {{question.rating}}
         </div>
       </div>
 
@@ -39,7 +39,7 @@
 
     <div class="col">
       <div class="row">
-        <a href="{% url 'question' pk=question.pk}" class="h4">{{question.title}}</a>
+        <a href="#" class="h4">{{question.title}}</a>
       </div>
 
       <div class="row">

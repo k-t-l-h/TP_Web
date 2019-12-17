@@ -34,3 +34,6 @@ for i in range(100 000):
                                 author=list(User.objects.all())
                                 [randint(0, len(User.objects.all())-1)])
     q.save()
+
+#добавть ответы
+#менеджер
