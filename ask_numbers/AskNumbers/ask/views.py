@@ -30,14 +30,13 @@ def index(request):
 def login(request):
     if request.method == "POST":
         form = LoginForm(request.POST)
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            log(request, user)
-            return redirect('index')
-        else:
-            forms.ValidationError("You have forgotten about Fred!")
+        if form.is_valid():
+            form.clean()
+            user = authenticate(username=form.cleaned_data.get('username'),
+                                password=form.cleaned_data.get('password'))
+            if user is not None:
+                log(request, user)
+                return redirect('index')
     else:
         form = LoginForm()
     return render(request, 'ask/login.html', {'form': form})
@@ -78,32 +77,30 @@ def signup(request):
 
 def new_question(request):
     if request.method == "POST":
-        _title = request.POST['title']
-        _text = request.POST['text']
-        #_tag = request.POST['tag']
-
-        q = Question.objects.create(title=_title,
-                                    text=_text, rating= 0 ,
-                                    author= request.user)
-        q.save()
-        return redirect('question', q.pk)
+        form = QuestionForm(request.POST)
+        if form.is_valid():
+            q = Question.objects.create(title=form.cleaned_data.get('title'),
+                                        text=form.cleaned_data.get('text'), rating= 0 ,
+                                        author= request.user)
+            q.save()
+            return redirect('question', q.pk)
+        return render(request, 'ask/new_question.html',  {'form': form})
     else:
         form = QuestionForm()
         return render(request, 'ask/new_question.html',  {'form': form})
 
 def new_answer(request):
     if request.method == "POST":
-        _title = request.POST['title']
-        _text = request.POST['text']
-        #_tag = request.POST['tag']
-
-        a = Answer.objects.create(title=_title,
-                                    text=_text, rating= 0,
-                                    author= request.user, question = 0, correct = False)
-        a.save()
-        return redirect('question')
+        form = AnswerForm(request.POST)
+        if form.is_valid():
+            form.clean()
+            a = Answer.objects.create(title=form.cleaned_data.get('title'),
+                                        text=form.cleaned_data.get('text'), rating= 0,
+                                        author= request.user, question = 0, correct = False)
+            a.save()
+            return redirect('question', q.pk)
     else:
-        form = QuestionForm()
+        form = AnswerForm()
         return render(request, 'ask/new_question.html',  {'form': form})
 
 
