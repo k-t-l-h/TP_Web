@@ -1,0 +1,61 @@
+{% extends "ask/base.html"%}
+{% load static %}
+
+
+
+{% block content %}
+<div class="col-8 mt-3 mb-3">
+  <h2 align="center">Welcome to Numbers World!</h2>
+  <form>
+    <div class="row mt-5">
+      <div class="col-1 h5">
+        <label for="formTitle">Title</label>
+      </div>
+      <div class="col-8">
+        <input type="text" class="form-control" id="formTitle" placeholder="What do numbers tell today?">
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <div class="col-1 h5">
+        <label for="formText">Text</label>
+      </div>
+      <div class="col-8">
+        <textarea class="form-control" id="formText" placeholder="What is your question?" rows="8"></textarea>
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <div class="col-1 h5">
+        <label for="formTags">Tags</label>
+      </div>
+      <div class="col-8">
+        <input type="text" class="form-control" id="formTags" placeholder="Some taaags">
+      </div>
+    </div>
+    <button type="submit" class="mx-auto btn btn-primary">Ask!</button>
+  </form>
+</div>
+{% endblock %}
+
+{% block sidebar %}
+
+        <div class="row tags">
+          <p class="mr-3 w-100 h2">Popular tags</p>
+          <a class="mr-3 h4" href="#">Numbers</a>
+          <a class="mr-3 h4" href="#">Algebra</a>
+          <a class="mr-3 h4" href="#">Prime</a>
+          <a class="mr-3 h4" href="#">Probability</a>
+        </div>
+
+        <div class="row tags">
+          <p class="mr-3 h2">Best Members</p>
+          <a class="mr-3 h4 w-100" href="#">Riemann</a>
+          <a class="mr-3 h4 w-100" href="#">Fermat</a>
+          <a class="mr-3 h4 w-100" href="#">Euler</a>
+          <a class="mr-3 h4 w-100" href="#">Lagrange</a>
+          <a class="mr-3 h4 w-100" href="#">Gauss</a>
+
+        </div>
+
+{% endblock %}
