@@ -1,0 +1,84 @@
+{% extends "chat/base.html" %}
+{% load static %}
+
+{% block title %}
+    Тег {{ tag }}
+{% endblock %}
+
+{% block content %}
+    <table class="table">
+        <thead class="thead-inverse">
+        <tr>
+            <th style="border-color: white;" colspan="3">
+                <h3 style="text-align: center">Вопросы по тегу: "{{ tag }}"</h3>
+            </th>
+        </tr>
+        </thead>
+    </table>
+    {% for item in posts %}
+        <div class="row question mt-4 mr-3 font">
+            <div class="container">
+                <div class="row mt-2">
+                    <div class="col-2">
+                        <div class="row">
+                            <img class="avatar" style="margin: auto" src="/{{item.author.userprofile.avatar}}" alt="">
+                        </div>
+
+                        <div class="row mt-1">
+                            <img class="avatar mx-auto my-auto" src={% static "avatar.png" %} alt="">
+                        </div>
+
+                        <div class="row mt-1">
+                            <div class="center-text" style="margin: auto" id="rating{{item.id}}">
+                                {{item.rating_num}}
+                            </div>
+                        </div>
+
+                        <div class="row mt-1">
+                            <div class="btn-group mx-auto my-auto">
+                                {% if user.is_authenticated %}
+                                <button type="button" class = "btn btn-secondary likes-button" answer="like" data-ans="{{ item.id }}">
+                                    <strong>+</strong>
+                                </button>
+                                <button type="button" class="btn btn-secondary likes-button" answer="dislike" data-ans="{{ item.id }}">
+                                    <strong>-</strong>
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="row">
+                            <a href="{% url 'questions' item.id %}" class="h4">{{item.title}}</a>
+                        </div>
+
+                        <div class="row">
+                            <p>
+                                {{item.text}}
+                            </p>
+                        </div>
+
+                        <div class="row">
+                            <div class="col mt-3">
+                                <a href ="{% url 'questions' item.id %}">Answers: ({{item.answer}})</a>
+                            </div>
+                            <div class="col mt-3 my-3">
+                                <span>Tags:</span>
+                                {% for tag in item.tags.all%}
+                                    <a href="{% url 'tag' tag %}" class="question-tag">{{tag}}</a>
+                                {% empty %}
+                                    <span>None</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+    {%block pagination%}
+        {% include "chat/pagination.html" %}
+    {%endblock%}
+{% endblock %}
