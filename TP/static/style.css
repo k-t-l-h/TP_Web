@@ -4,9 +4,9 @@
 }
 
 .font {
-  background: #f6f6f6;
-  border-radius: 15px;
-  box-shadow: 0 2px 13px 1px rgba(122, 122, 122, 0.2);
+  background: #e6def1;
+  /*border-radius: 15px;*/
+  box-shadow: 0 2px 13px 1px rgba(176, 226, 232, 0.2);
 }
 
 .answer {
@@ -15,13 +15,13 @@
   box-shadow: 0 2px 13px 1px rgba(177, 177, 177, 0.2);
 }
 
-.flex-box {
-  display: flex;
-  float: right;
-}
+/*.flex-box {*/
+/*  display: flex;*/
+/*  float: right;*/
+/*}*/
 
-.top {
-  width: 200px;
-  border-color: white;
-  padding: .25rem
-}
+/*.top {*/
+/*  width: 200px;*/
+/*  border-color: white;*/
+/*  padding: .25rem*/
+/*}*/
