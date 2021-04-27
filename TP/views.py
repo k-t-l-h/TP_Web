@@ -63,7 +63,7 @@ def index(request, mod=0):
     title_page = title + ':'
     like = Likes.objects.all().filter(id_user=request.user.id)
     # for page.object_list range
-    return render(request, 'chat/index.html', {
+    return render(request, 'TP/index.html', {
         'avatar': avatar(request), 'like': like,
         'title': title, 'title_page': title_page, 'hot': hot, 'new': new,
         'page': page, 'posts': page.object_list, 'paginator': page.paginator
@@ -75,11 +75,11 @@ def questions_hot(request):
 
 
 def login(request):
-    return render(request, 'chat/login.html')
+    return render(request, 'TP/login.html')
 
 
 def signup(request):
-    return render(request, 'chat/signup.html')
+    return render(request, 'TP/signup.html')
 
 
 def question(request, quest_num=1):
@@ -101,7 +101,7 @@ def question(request, quest_num=1):
     if request.user.is_authenticated:
         user_name = request.user.first_name
     page.paginator.baseurl = '/question/' + str(quest_num) + '/?page='
-    return render(request, 'chat/question.html',
+    return render(request, 'TP/question.html',
                   {'posts': page.paginator.page(page.paginator.num_pages).object_list, 'avatar': avatar(request),
                    'paginator': page.paginator, 'page': page.paginator.page(page.paginator.num_pages),
                    'id': quest_num, 'question': q, 'form': form, 'user_name': user_name, 'errors': error})
@@ -116,7 +116,7 @@ def questions_tag(request, tag):
         raise Http404("No tag provided")
 
     page.paginator.baseurl = '/tag/' + tag + '/?page='
-    return render(request, "chat/tag.html", {'posts': page.object_list, 'avatar': avatar(request),
+    return render(request, "TP/tag.html", {'posts': page.object_list, 'avatar': avatar(request),
                                              'paginator': page.paginator, 'page': page, 'tag': tag})
 
 
@@ -132,7 +132,7 @@ def make_login(request):
     else:
         error = request.GET.get('error')
         form = LoginForm()
-    return render(request, 'chat/login.html', {'form': form, 'error': error})
+    return render(request, 'TP/login.html', {'form': form, 'error': error})
 
 
 def logout(request):
@@ -151,7 +151,7 @@ def registration(request):
         data = get_data(request)
         if len(error_fields) > 0:
             form = UserRegistrationForm()
-            return render(request, 'chat/signup.html', {'form': form, 'errors': error_fields})
+            return render(request, 'TP/signup.html', {'form': form, 'errors': error_fields})
         try:
             user = User.objects.create_user(username=data['username'], email=data['email'], password=data['password1'])
             user.first_name = data['first_name']
@@ -164,7 +164,7 @@ def registration(request):
             error_fields.append("Нарушена уникальность вводимых данных")
             return HttpResponseRedirect('/?continue=reg')
     form = UserRegistrationForm()
-    return render(request, 'chat/signup.html', {'form': form, 'errors': error_fields})
+    return render(request, 'TP/signup.html', {'form': form, 'errors': error_fields})
 
 
 def ask_quest(request):
@@ -183,7 +183,7 @@ def ask_quest(request):
             quest.save()
             return HttpResponseRedirect('/question/{}/'.format(quest.id))
     form = AskForm()
-    return render(request, 'chat/ask.html', {'form': form, 'avatar': avatar(request), 'errors': error})
+    return render(request, 'TP/ask.html', {'form': form, 'avatar': avatar(request), 'errors': error})
 
 
 def settings(request):
@@ -217,7 +217,7 @@ def settings(request):
             success.append('Сохранено')
         else:
             success = None
-        return render(request, 'chat/settings.html', {'form': form, 'avatar': avatar(request),
+        return render(request, 'TP/settings.html', {'form': form, 'avatar': avatar(request),
                                                       'errors': error, 'success': success})
     return HttpResponseRedirect('/?continue=notlogin')
 

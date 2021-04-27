@@ -1,5 +1,5 @@
 """
-WSGI config for Chat_Django project.
+WSGI config for TP_Web project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Chat_Django.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'TP_Web.settings')
 
 application = get_wsgi_application()

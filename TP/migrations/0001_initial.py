@@ -49,7 +49,7 @@ class Migration(migrations.Migration):
                 ('added_on', models.DateTimeField(auto_now_add=True, verbose_name='дата и время добавления')),
                 ('answer', models.IntegerField(default=0, verbose_name='колличество ответов')),
                 ('author', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to=settings.AUTH_USER_MODEL, verbose_name='автор')),
-                ('tags', models.ManyToManyField(to='chat.Tag')),
+                ('tags', models.ManyToManyField(to='TP.Tag')),
             ],
             options={
                 'verbose_name': 'вопрос',
@@ -61,7 +61,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('value', models.IntegerField(default=0)),
-                ('id_question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='chat.question')),
+                ('id_question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='TP.question')),
                 ('id_user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='id')),
             ],
         ),
@@ -74,7 +74,7 @@ class Migration(migrations.Migration):
                 ('rating_num', models.IntegerField(default=0, verbose_name='рейтинг')),
                 ('added_on', models.DateTimeField(auto_now_add=True, verbose_name='дата и время добавления')),
                 ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='автор')),
-                ('question', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, related_name='answers', to='chat.question', verbose_name='вопрос')),
+                ('question', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, related_name='answers', to='TP.question', verbose_name='вопрос')),
             ],
             options={
                 'verbose_name': 'ответ',
