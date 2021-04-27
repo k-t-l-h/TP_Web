@@ -1,24 +1,20 @@
-{% extends 'chat/base.html' %}
+{% extends "TP/base.html" %}
 {% load static %}
 
+{% block title %}
+    Тег {{ tag }}
+{% endblock %}
+
 {% block content %}
-    <div class="row col-md-12">
-        <div class="col-md-5">
-            <h2>{{ title_page }}</h2>
-        </div>
-        {% if hot %}
-            <div class="col-md-3 my-1">
-                <a type="button" class="btn btn-outline-secondary" href="{% url 'hot' %}">{{ hot }}</a>
-            </div>
-        {% endif %}
-
-        {% if new %}
-        <div class="col-md-3 my-1">
-            <a type="button" class="btn btn-outline-secondary" href="{% url 'index' %}">{{ new }}</a>
-        </div>
-        {% endif %}
-    </div>
-
+    <table class="table">
+        <thead class="thead-inverse">
+        <tr>
+            <th style="border-color: white;" colspan="3">
+                <h3 style="text-align: center">Вопросы по тегу: "{{ tag }}"</h3>
+            </th>
+        </tr>
+        </thead>
+    </table>
     {% for item in posts %}
         <div class="row question mt-4 mr-3 font">
             <div class="container">
@@ -26,6 +22,10 @@
                     <div class="col-2">
                         <div class="row">
                             <img class="avatar" style="margin: auto" src="/{{item.author.userprofile.avatar}}" alt="">
+                        </div>
+
+                        <div class="row mt-1">
+                            <img class="avatar mx-auto my-auto" src={% static "avatar.png" %} alt="">
                         </div>
 
                         <div class="row mt-1">
@@ -37,22 +37,10 @@
                         <div class="row mt-1">
                             <div class="btn-group mx-auto my-auto">
                                 {% if user.is_authenticated %}
-                                <button type="button" answer="like" data-ans="{{ item.id }}"
-                                    {% for likes in like %}
-                                        {% if likes.id_question_id is item.id and likes.value > 0 %} disabled
-                                            {% if likes.value == 1 %}class="btn btn-success likes-button"{% endif %}
-                                            {% if likes.value == 2 %} class="btn btn-danger likes-button"{% endif %}
-                                        {% endif %}
-                                    {% endfor %} class = "btn btn-secondary likes-button">
+                                <button type="button" class = "btn btn-secondary likes-button" answer="like" data-ans="{{ item.id }}">
                                     <strong>+</strong>
                                 </button>
-                                <button type="button" answer="dislike" data-ans="{{ item.id }}"
-                                    {% for likes in like %}
-                                        {% if likes.id_question_id is item.id and likes.value > 0 %} disabled
-                                            {% if likes.value == 1 %} class="btn btn-success likes-button"{% endif %}
-                                            {% if likes.value == 2 %} class="btn btn-danger likes-button"{% endif %}
-                                        {% endif %}
-                                    {% endfor %} class = "btn btn-secondary likes-button">
+                                <button type="button" class="btn btn-secondary likes-button" answer="dislike" data-ans="{{ item.id }}">
                                     <strong>-</strong>
                                 </button>
                                 {% endif %}
@@ -91,7 +79,6 @@
     {% endfor %}
 
     {%block pagination%}
-        {% include "chat/pagination.html" %}
+        {% include "TP/pagination.html" %}
     {%endblock%}
 {% endblock %}
-

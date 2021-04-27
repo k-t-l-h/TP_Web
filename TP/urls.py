@@ -16,6 +16,5 @@ urlpatterns = [
     path('ask/', ask_quest, name='ask'),
     path('profile/edit/', settings, name='settings'),
     path('tag/<str:tag>/', questions_tag, name='tag'),
-]
-urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)
+] + static(MEDIA_URL, document_root=MEDIA_ROOT)
 urlpatterns += staticfiles_urlpatterns()

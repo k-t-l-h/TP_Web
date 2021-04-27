@@ -1,4 +1,4 @@
-{% extends "chat/base.html" %}
+{% extends "TP/base.html" %}
 {% load static %}
 
 {% block title %}
@@ -15,7 +15,7 @@
             <div class="container row mt-2">
                 <div class="col-2">
                     <div class="row">
-                        <img class="avatar" style="margin: auto" src="/media/{{question.author.userprofile.avatar}}" alt="">
+                        <img class="avatar" style="margin: auto" src="/{{question.author.userprofile.avatar}}" alt="">
                     </div>
 
                     <div class="row mt-1">
@@ -66,7 +66,7 @@
                 <div class="container row mt-2 py-3">
                     <div class="col-2">
                         <div class="row">
-                            <img class="avatar" style="margin: auto" src="/media/{{comment.author.userprofile.avatar}}" alt="">
+                            <img class="avatar" style="margin: auto" src="/{{comment.author.userprofile.avatar}}" alt="">
                         </div>
 
                         <div class="row mt-1">
@@ -108,7 +108,7 @@
         <div>
             {% if posts %}
                 {%block pagination%}
-                    {% include "chat/pagination.html" %}
+                    {% include "TP/pagination.html" %}
                 {%endblock%}
             {% endif %}
         </div>
