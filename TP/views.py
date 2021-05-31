@@ -62,7 +62,7 @@ def index(request, mod=0):
         new = None
     title_page = title + ':'
     like = Likes.objects.all().filter(id_user=request.user.id)
-    return render(request, 'chat/index.html', {
+    return render(request, 'TP/index.html', {
         'avatar': avatar(request), 'like': like,
         'title': title, 'title_page': title_page, 'hot': hot, 'new': new,
         'page': page, 'posts': page.object_list, 'paginator': page.paginator
@@ -74,11 +74,11 @@ def questions_hot(request):
 
 
 def login(request):
-    return render(request, 'chat/login.html')
+    return render(request, 'TP/login.html')
 
 
 def signup(request):
-    return render(request, 'chat/signup.html')
+    return render(request, 'TP/signup.html')
 
 
 def question(request, quest_num=1):
@@ -99,7 +99,7 @@ def question(request, quest_num=1):
     if request.user.is_authenticated:
         user_name = request.user.first_name
     page.paginator.baseurl = '/question/' + str(quest_num) + '/?page='
-    return render(request, 'chat/question.html',
+    return render(request, 'TP/question.html',
                   {'posts': page.paginator.page(page.paginator.num_pages).object_list, 'avatar': avatar(request),
                    'paginator': page.paginator, 'page': page.paginator.page(page.paginator.num_pages),
                    'id': quest_num, 'question': q, 'form': form, 'user_name': user_name})
@@ -114,13 +114,13 @@ def questions_tag(request, tag):
         raise Http404("No tag provided")
 
     page.paginator.baseurl = '/tag/' + tag + '/?page='
-    return render(request, "chat/tag.html", {'posts': page.object_list, 'avatar': avatar(request),
-                                             'paginator': page.paginator, 'page': page, 'tag': tag})
+    return render(request, "TP/tag.html", {'posts': page.object_list, 'avatar': avatar(request),
+                                           'paginator': page.paginator, 'page': page, 'tag': tag})
 
 
 def make_login(request):
     if request.user.is_authenticated:
-        return HttpResponseRedirect('/?continue=relog')
+        return HttpResponseRedirect('/')
     if request.method == "GET":
         form = LoginForm()
     if request.method == "POST":
@@ -129,15 +129,15 @@ def make_login(request):
             user = auth.authenticate(username=request.POST.get('username'), password=request.POST.get('password'))
             if user is not None:
                 auth.login(request, user)
-                return HttpResponseRedirect('/?continue=login')
-        return render(request, 'chat/login.html', {'form': form})
-    return render(request, 'chat/login.html', {'form': form})
+                return HttpResponseRedirect('/')
+        return render(request, 'TP/login.html', {'form': form})
+    return render(request, 'TP/login.html', {'form': form})
 
 
 def logout(request):
     if request.user.is_authenticated:
         auth.logout(request)
-    return HttpResponseRedirect('/?continue=logout')
+    return HttpResponseRedirect('/')
 
 
 def registration(request):
@@ -147,7 +147,8 @@ def registration(request):
         if form.is_valid():
             data = get_data(request)
             try:
-                user = User.objects.create_user(username=data['username'], email=data['email'], password=data['password'])
+                user = User.objects.create_user(username=data['username'], email=data['email'],
+                                                password=data['password'])
                 user.first_name = data['first_name']
                 user.last_name = data['last_name']
                 user.save()
@@ -156,11 +157,11 @@ def registration(request):
                 add_avatar.save()
             except IntegrityError:
                 alert = False
-                return render(request, 'chat/signup.html', {'form': form, 'alert': alert})
+                return render(request, 'TP/signup.html', {'form': form, 'alert': alert})
         alert = True
-        return render(request, 'chat/signup.html', {'form': form, 'alert': alert})
+        return render(request, 'TP/signup.html', {'form': form, 'alert': alert})
     form = UserRegistrationForm()
-    return render(request, 'chat/signup.html', {'form': form, 'alert': alert})
+    return render(request, 'TP/signup.html', {'form': form, 'alert': alert})
 
 
 def ask_quest(request):
@@ -169,16 +170,17 @@ def ask_quest(request):
     if request.method == "POST":
         form = AskForm(request.POST)
         if form.is_valid():
-            quest = Question.objects.create(title=request.POST.get('title'), text=request.POST.get('text'), author=request.user)
+            quest = Question.objects.create(title=request.POST.get('title'), text=request.POST.get('text'),
+                                            author=request.user)
             tags = request.POST.get('tags').split(",")
             for tag in tags:
                 tag = (str(tag)).replace(' ', '')
                 Tag.objects.add_qst(tag, quest)
             quest.save()
             return HttpResponseRedirect('/question/{}/'.format(quest.id))
-        return render(request, 'chat/ask.html', {'form': form, 'avatar': avatar(request)})
+        return render(request, 'TP/ask.html', {'form': form, 'avatar': avatar(request)})
     form = AskForm()
-    return render(request, 'chat/ask.html', {'form': form, 'avatar': avatar(request)})
+    return render(request, 'TP/ask.html', {'form': form, 'avatar': avatar(request)})
 
 
 @csrf_exempt
@@ -211,7 +213,7 @@ def settings(request):
                 if user is not None:
                     auth.login(request, user)
             alert = True
-            return render(request, 'chat/settings.html', {'form': form, 'avatar': avatar(request), 'alert': alert})
+            return render(request, 'TP/settings.html', {'form': form, 'avatar': avatar(request), 'alert': alert})
         # auto filed
         user_data = User.objects.get(id=request.user.id)
         first_name = user_data.first_name
@@ -220,8 +222,8 @@ def settings(request):
         email = user_data.email
         form = UserRegistrationForm({'first_name': first_name, 'last_name': last_name, 'username': username,
                                      'email': email})
-        return render(request, 'chat/settings.html', {'form': form, 'avatar': avatar(request), 'alert': alert})
-    return HttpResponseRedirect('/?continue=notlogin')
+        return render(request, 'TP/settings.html', {'form': form, 'avatar': avatar(request), 'alert': alert})
+    return HttpResponseRedirect('/')
 
 
 # static
