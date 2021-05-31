@@ -62,8 +62,7 @@ def index(request, mod=0):
         new = None
     title_page = title + ':'
     like = Likes.objects.all().filter(id_user=request.user.id)
-    # for page.object_list range
-    return render(request, 'TP/index.html', {
+    return render(request, 'chat/index.html', {
         'avatar': avatar(request), 'like': like,
         'title': title, 'title_page': title_page, 'hot': hot, 'new': new,
         'page': page, 'posts': page.object_list, 'paginator': page.paginator
@@ -75,36 +74,35 @@ def questions_hot(request):
 
 
 def login(request):
-    return render(request, 'TP/login.html')
+    return render(request, 'chat/login.html')
 
 
 def signup(request):
-    return render(request, 'TP/signup.html')
+    return render(request, 'chat/signup.html')
 
 
 def question(request, quest_num=1):
-    error = []
     if quest_num is None:
         raise Http404("No questions provided")
     if request.method == "POST":
         form = AnswerForm(request.POST)
-        error = form.validate()
-        if len(error) == 0:
+        if form.is_valid():
             quest = Question.objects.get(id=quest_num)
             quest.answer = quest.answer + 1
             quest.save()
             Answer.objects.create(content=request.POST.get('text'), question=quest, author=request.user)
+    else:
+        form = AnswerForm()
     q = Question.objects.get(id=quest_num)
-    form = AnswerForm()
     page = paginate(request, q.answers.all())
     user_name = None
     if request.user.is_authenticated:
         user_name = request.user.first_name
     page.paginator.baseurl = '/question/' + str(quest_num) + '/?page='
-    return render(request, 'TP/question.html',
+    return render(request, 'chat/question.html',
                   {'posts': page.paginator.page(page.paginator.num_pages).object_list, 'avatar': avatar(request),
                    'paginator': page.paginator, 'page': page.paginator.page(page.paginator.num_pages),
-                   'id': quest_num, 'question': q, 'form': form, 'user_name': user_name, 'errors': error})
+                   'id': quest_num, 'question': q, 'form': form, 'user_name': user_name})
 
 
 def questions_tag(request, tag):
@@ -116,23 +114,24 @@ def questions_tag(request, tag):
         raise Http404("No tag provided")
 
     page.paginator.baseurl = '/tag/' + tag + '/?page='
-    return render(request, "TP/tag.html", {'posts': page.object_list, 'avatar': avatar(request),
+    return render(request, "chat/tag.html", {'posts': page.object_list, 'avatar': avatar(request),
                                              'paginator': page.paginator, 'page': page, 'tag': tag})
 
 
 def make_login(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect('/?continue=relog')
-    if request.method == "POST":
-        user = auth.authenticate(username=request.POST.get('login'), password=request.POST.get('password'))
-        if user is not None:
-            auth.login(request, user)
-            return HttpResponseRedirect('/?continue=login')
-        return HttpResponseRedirect('/login/?error=login')
-    else:
-        error = request.GET.get('error')
+    if request.method == "GET":
         form = LoginForm()
-    return render(request, 'TP/login.html', {'form': form, 'error': error})
+    if request.method == "POST":
+        form = LoginForm(data=request.POST)
+        if form.is_valid():
+            user = auth.authenticate(username=request.POST.get('username'), password=request.POST.get('password'))
+            if user is not None:
+                auth.login(request, user)
+                return HttpResponseRedirect('/?continue=login')
+        return render(request, 'chat/login.html', {'form': form})
+    return render(request, 'chat/login.html', {'form': form})
 
 
 def logout(request):
@@ -142,39 +141,34 @@ def logout(request):
 
 
 def registration(request):
-    error_fields = []
-    if request.user.is_authenticated:
-        return HttpResponseRedirect('/?continue=relog')
+    alert = False
     if request.method == "POST":
         form = UserRegistrationForm(request.POST)
-        error_fields = form.validate()
-        data = get_data(request)
-        if len(error_fields) > 0:
-            form = UserRegistrationForm()
-            return render(request, 'TP/signup.html', {'form': form, 'errors': error_fields})
-        try:
-            user = User.objects.create_user(username=data['username'], email=data['email'], password=data['password1'])
-            user.first_name = data['first_name']
-            user.last_name = data['last_name']
-            user.save()
-            user_pk = User.objects.get(id=user.pk)
-            add_avatar = UserProfile(user=user_pk, avatar=data['avatar'])
-            add_avatar.save()
-        except IntegrityError:
-            error_fields.append("Нарушена уникальность вводимых данных")
-            return HttpResponseRedirect('/?continue=reg')
+        if form.is_valid():
+            data = get_data(request)
+            try:
+                user = User.objects.create_user(username=data['username'], email=data['email'], password=data['password'])
+                user.first_name = data['first_name']
+                user.last_name = data['last_name']
+                user.save()
+                user_pk = User.objects.get(id=user.pk)
+                add_avatar = UserProfile(user=user_pk, avatar=data['avatar'])
+                add_avatar.save()
+            except IntegrityError:
+                alert = False
+                return render(request, 'chat/signup.html', {'form': form, 'alert': alert})
+        alert = True
+        return render(request, 'chat/signup.html', {'form': form, 'alert': alert})
     form = UserRegistrationForm()
-    return render(request, 'TP/signup.html', {'form': form, 'errors': error_fields})
+    return render(request, 'chat/signup.html', {'form': form, 'alert': alert})
 
 
 def ask_quest(request):
-    error = []
     if not request.user.is_authenticated:
         return JsonResponse({'status': 'error', 'message': 'Ошибка доступа'})
     if request.method == "POST":
         form = AskForm(request.POST)
-        error = form.validate()
-        if len(error) == 0:
+        if form.is_valid():
             quest = Question.objects.create(title=request.POST.get('title'), text=request.POST.get('text'), author=request.user)
             tags = request.POST.get('tags').split(",")
             for tag in tags:
@@ -182,51 +176,62 @@ def ask_quest(request):
                 Tag.objects.add_qst(tag, quest)
             quest.save()
             return HttpResponseRedirect('/question/{}/'.format(quest.id))
+        return render(request, 'chat/ask.html', {'form': form, 'avatar': avatar(request)})
     form = AskForm()
-    return render(request, 'TP/ask.html', {'form': form, 'avatar': avatar(request), 'errors': error})
+    return render(request, 'chat/ask.html', {'form': form, 'avatar': avatar(request)})
+
+
+@csrf_exempt
+def correct(request):
+    if request.method == 'POST':
+        ans_id = request.POST['answer_id']
+        answer = Answer.objects.get(pk=ans_id)
+        if answer.author_id == request.user.id:
+            answer.is_correct = not answer.is_correct
+            answer.save()
+        return JsonResponse({'status': "ok"})
 
 
 def settings(request):
-    success = error = []
-    flag = False
     if request.user.is_authenticated:
+        alert = False
         if request.method == "POST":
             form = UserRegistrationForm(request.POST)
-            error = form.validate()
-            data = get_data(request)
-            flag = True
-            request.user.username = data['username']
-            request.user.set_password(data['password1'])
-            request.user.email = data['email']
-            request.user.first_name = data['first_name']
-            request.user.last_name = data['last_name']
-            request.user.userprofile.avatar = data['avatar']
-            request.user.save()
-            request.user.userprofile.save()
-            user = auth.authenticate(username=data['username'], password=data['password1'])
-            if user is not None:
-                auth.login(request, user)
+            if form.is_valid():
+                data = get_data(request)
+                request.user.username = data['username']
+                request.user.set_password(data['password'])
+                request.user.email = data['email']
+                request.user.first_name = data['first_name']
+                request.user.last_name = data['last_name']
+                request.user.userprofile.avatar = data['avatar']
+                request.user.save()
+                request.user.userprofile.save()
+                user = auth.authenticate(username=data['username'], password=data['password'])
+                if user is not None:
+                    auth.login(request, user)
+            alert = True
+            return render(request, 'chat/settings.html', {'form': form, 'avatar': avatar(request), 'alert': alert})
         # auto filed
         user_data = User.objects.get(id=request.user.id)
         first_name = user_data.first_name
         last_name = user_data.last_name
         username = user_data.username
         email = user_data.email
-        form = UserRegistrationForm({'first_name': first_name, 'last_name': last_name, 'username': username, 'email': email})
-        if len(error) == 0 and flag:
-            success.append('Сохранено')
-        else:
-            success = None
-        return render(request, 'TP/settings.html', {'form': form, 'avatar': avatar(request),
-                                                      'errors': error, 'success': success})
+        form = UserRegistrationForm({'first_name': first_name, 'last_name': last_name, 'username': username,
+                                     'email': email})
+        return render(request, 'chat/settings.html', {'form': form, 'avatar': avatar(request), 'alert': alert})
     return HttpResponseRedirect('/?continue=notlogin')
 
 
 # static
 def avatar(request):
     ava = None
-    if request.user.is_authenticated:
-        ava = UserProfile.objects.get(user_id=request.user.id).avatar.url
+    try:
+        if request.user.is_authenticated:
+            ava = UserProfile.objects.get(user_id=request.user.id).avatar.url
+    except ValueError:
+        pass
     return ava
 
 
@@ -236,7 +241,7 @@ def get_data(request):
     data['last_name'] = request.POST.get("last_name")
     data['username'] = request.POST.get("username")
     data['email'] = request.POST.get("email")
-    data['password1'] = request.POST.get("password")
+    data['password'] = request.POST.get("password")
     data['password2'] = request.POST.get("password2")
     data['avatar'] = request.FILES.get("avatar")
     return data

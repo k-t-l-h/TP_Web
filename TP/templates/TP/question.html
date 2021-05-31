@@ -90,12 +90,12 @@
                     </div>
                     <div class="col mx-2">
                         {{ comment.content }}
-                        {% if comment.is_correct == False %}
+                        {% if question.author_id == user.id%}
                             <form>
                                 <div class="form-check my-2">
-                                    <label class="form-check-label">
-                                        <input class="form-check-input" type="checkbox" value="">
-                                        Correct!
+                                    <label class="form-check-label correct-button" correct-ans="{{ comment.id }}">
+                                        <input class="form-check-input" type="checkbox" {% if comment.is_correct %} checked {% endif %}>
+                                        Правильный ответ!
                                     </label>
                                 </div>
                             </form>
@@ -108,16 +108,16 @@
         <div>
             {% if posts %}
                 {%block pagination%}
-                    {% include "TP/pagination.html" %}
+                    {% include "chat/pagination.html" %}
                 {%endblock%}
             {% endif %}
         </div>
 
         {% if user_name is not None %}
             <div>
-             {% for error in errors %}
-                        <div class="alert alert-danger"> {{ error }} </div>
-                    {% endfor %}
+                {% if form.errors %}
+                    <div class="alert alert-danger">{{ form.non_field_errors.as_text|slice:"2:" }}</div>
+                {% endif %}
                 <form method="post">
                     {% csrf_token %}
                     <fieldset>
