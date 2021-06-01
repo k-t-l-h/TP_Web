@@ -62,10 +62,31 @@ def index(request, mod=0):
         new = None
     title_page = title + ':'
     like = Likes.objects.all().filter(id_user=request.user.id)
+    # достаем самые часто встречающие теги
+    the_best_tag = Question.objects.hot_tags()
+    tags = list()
+    for i in the_best_tag:
+        tags.append(i)
+    list_tags = tags[-5:]
+    name_tag = list()
+    for L in list_tags:
+        name_tag.append(Tag.objects.get(id=L['tags']))
+    name_tag.reverse()  # теперь самые популярные
+
+    # достаем самые часто встречающиеся пользователи
+    the_best_users = Question.objects.hot_users()
+    user = list()
+    for i in the_best_users:
+        user.append(i)
+    list_users = user[-5:]
+    name_user = list()
+    for L in list_users:
+        name_user.append(UserProfile.objects.get(id=L['author_id']))
+    name_user.reverse()  # теперь самые популярные
     return render(request, 'TP/index.html', {
         'avatar': avatar(request), 'like': like,
-        'title': title, 'title_page': title_page, 'hot': hot, 'new': new,
-        'page': page, 'posts': page.object_list, 'paginator': page.paginator
+        'title': title, 'title_page': title_page, 'hot': hot, 'new': new, 'page': page, 'posts': page.object_list,
+        'paginator': page.paginator, 'popular_tag': name_tag, 'name_user': name_user
     })
 
 
